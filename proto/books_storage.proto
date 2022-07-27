@@ -1,0 +1,17 @@
+syntax= "proto3";
+
+package books_storage;
+option go_package = "./books_storage";
+
+message Author {
+    repeated string AuthorName = 1;
+}
+
+message Book {
+    repeated string BookName = 1;
+}
+
+service BooksStorage {
+    rpc GetBooksByAuthors(Author) returns (Book){}
+    rpc GetAuthorsByBooks(Book) returns (Author){}
+}
