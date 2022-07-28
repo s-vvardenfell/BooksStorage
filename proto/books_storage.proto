@@ -3,15 +3,15 @@ syntax= "proto3";
 package books_storage;
 option go_package = "./books_storage";
 
-message Author {
+message Authors {
     repeated string AuthorName = 1;
 }
 
-message Book {
+message Books {
     repeated string BookName = 1;
 }
 
 service BooksStorage {
-    rpc GetBooksByAuthors(Author) returns (Book){}
-    rpc GetAuthorsByBooks(Book) returns (Author){}
+    rpc GetBooksByAuthors(Authors) returns (Books){}
+    rpc GetAuthorsByBooks(Books) returns (Authors){}
 }
