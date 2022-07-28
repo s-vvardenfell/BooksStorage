@@ -16,7 +16,7 @@ import (
 
 func main() {
 	grpcServ := grpc.NewServer()
-	rcs := server.New("mysql", "s.vvardenfell:Zxasqw12@/kvadoru")
+	rcs := server.New("mysql", "")
 	books_storage.RegisterBooksStorageServer(grpcServ, rcs)
 
 	lis, err := net.Listen("tcp", fmt.Sprintf("%s:%s", "localhost", "50051"))
