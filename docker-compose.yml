@@ -1,0 +1,31 @@
+version: '3.4'
+
+services:
+  # db:
+  #   container_name: mysql
+  #   image: mysql:8
+  #   restart: always
+  #   environment:
+  #     MYSQL_ROOT_PASSWORD: pass
+  #     MYSQL_DATABASE: books
+  #   ports:
+  #     - 3306:3306
+  #   volumes:
+  #     - mysqldbvolume:/var/lib/mysql
+  grpcui:
+    image: wongnai/grpcui
+    container_name: grpcui
+    ports:
+      - "8091:8080"
+    environment:
+      - GRPCUI_SERVER=server:50051
+    depends_on:
+      - server
+
+  server:
+    image: books_server
+    container_name: server
+    environment:
+      - DSN=root:pass@/books
+    ports:
+      - "50051"
