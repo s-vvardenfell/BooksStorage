@@ -94,10 +94,10 @@ func PopulateTables(driver, dsn string) {
 }
 
 func Test_pkg(t *testing.T) {
-	CreateTables("mysql", "")
-	PopulateTables("mysql", "")
+	// CreateTables("mysql", "")
+	// PopulateTables("mysql", "")
 
-	go RunServer("mysql", "", "localhost", "50052")
+	go RunServer("mysql", "s.vvardenfell:Zxasqw12@/kvadoru", "localhost", "50052")
 	time.Sleep(time.Second)
 
 	client := NewClientStub("localhost", "50052")
@@ -129,5 +129,21 @@ func Test_pkg(t *testing.T) {
 		require.NoError(t, err)
 		require.NotNil(t, res)
 		require.Equal(t, len(res.AuthorNames), 2)
+	}
+
+	t.Log("\tGetting books by wrong author name")
+	{
+		author := "Толкин Д.Р.Р."
+		res, err := client.GetBooksByAuthor(ctx, &storage.Author{AuthorName: author})
+		require.NoError(t, err)
+		require.Empty(t, res.BookNames)
+	}
+
+	t.Log("\tGetting author by wrong book title")
+	{
+		book := "Властелин колец"
+		res, err := client.GetAuthorsByBook(ctx, &storage.Book{BookName: book})
+		require.NoError(t, err)
+		require.Empty(t, res.AuthorNames)
 	}
 }
