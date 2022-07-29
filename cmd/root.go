@@ -5,7 +5,9 @@ import (
 	"fmt"
 	"net"
 	"os"
+	"os/signal"
 	"path/filepath"
+	"syscall"
 
 	"github.com/s-vvardenfell/BooksStorage/books_storage"
 	"github.com/s-vvardenfell/BooksStorage/config"
@@ -26,6 +28,20 @@ var rootCmd = &cobra.Command{
 	Use:   "BooksStorage",
 	Short: "Simple books-authors storage",
 	Run: func(cmd *cobra.Command, args []string) {
+		c, err := cmd.Flags().GetBool("create")
+		cobra.CheckErr(err)
+
+		if c { // создаем таблицы, если передан флаг -c
+			server.CreateTables(driver, viper.GetString("DSN"))
+		}
+
+		p, err := cmd.Flags().GetBool("populate")
+		cobra.CheckErr(err)
+
+		if p { // заполняем таблицы данными, если передан флаг -p
+			server.PopulateTables(driver, viper.GetString("DSN"))
+		}
+
 		grpcServ := grpc.NewServer()
 
 		//получаем dsn из переменной окружения
@@ -46,6 +62,11 @@ var rootCmd = &cobra.Command{
 		if err := grpcServ.Serve(lis); err != nil {
 			logrus.Fatalf("failed to serve: %v", err)
 		}
+
+		sig := make(chan os.Signal, 1)
+		signal.Notify(sig, syscall.SIGINT)
+		<-sig
+		grpcServ.GracefulStop()
 	},
 }
 
@@ -60,6 +81,9 @@ func init() {
 	cobra.OnInitialize(initConfig)
 	rootCmd.PersistentFlags().StringVar(&cfgFile,
 		"config", "", "config file (default is resources/config.yml)")
+
+	rootCmd.Flags().BoolP("create", "c", false, "creates tables")
+	rootCmd.Flags().BoolP("populate", "p", false, "populates tables")
 }
 
 func initConfig() {
