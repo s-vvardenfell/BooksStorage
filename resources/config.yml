@@ -1,0 +1,8 @@
+serv_host: "localhost"
+serv_port: "50051"
+reflection: true
+logrus:
+  log_level: 4
+  to_file: false
+  to_json: false
+  log_dir: "logs/logs.log"
