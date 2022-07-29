@@ -155,7 +155,10 @@ func (s *Server) makeQuery(res *[]string, query, prepValue string) error {
 	// извлекаем
 	for row.Next() {
 		var temp string
-		row.Scan(&temp)
+		if err := row.Scan(&temp); err != nil {
+			logrus.Errorf("cannot scan value, %v", err)
+			return err
+		}
 		*res = append(*res, temp)
 	}
 	return nil
