@@ -1,4 +1,4 @@
-serv_host: "localhost"
+serv_host: ""
 serv_port: "50051"
 reflection: true
 logrus:

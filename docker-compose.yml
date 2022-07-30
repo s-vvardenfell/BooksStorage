@@ -1,17 +1,37 @@
 version: '3.4'
 
 services:
-  # db:
-  #   container_name: mysql
-  #   image: mysql:8
-  #   restart: always
-  #   environment:
-  #     MYSQL_ROOT_PASSWORD: pass
-  #     MYSQL_DATABASE: books
-  #   ports:
-  #     - 3306:3306
-  #   volumes:
-  #     - mysqldbvolume:/var/lib/mysql
+  server:
+    image: books_server
+    container_name: server
+    environment:
+      DSN: "user:passw@tcp(books_database)/kvadoru?charset=utf8&parseTime=True&loc=Local"
+    ports:
+      - "50051:50051"
+    # restart: on-failure
+      
+  db:
+    container_name: books_database
+    image: mysql:8
+    restart: always
+    environment:
+      MYSQL_USER: user
+      MYSQL_PASSWORD: passw
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: kvadoru
+    volumes:
+      - ./database:/tmp/database   
+    command: mysqld --init-file="/tmp/database/init.sql"
+    ports:
+      - "3306:3306"
+
+  # for Adminer
+  # admin:    
+  #   image: adminer    
+  #   ports:      
+  #     - "8080:8080"
+
+  # for grpcui
   grpcui:
     image: wongnai/grpcui
     container_name: grpcui
@@ -21,11 +41,3 @@ services:
       - GRPCUI_SERVER=server:50051
     depends_on:
       - server
-
-  server:
-    image: books_server
-    container_name: server
-    environment:
-      - DSN=root:pass@/books
-    ports:
-      - "50051"
