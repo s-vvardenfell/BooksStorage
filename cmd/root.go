@@ -34,6 +34,7 @@ var rootCmd = &cobra.Command{
 
 		grpcServ := grpc.NewServer()
 		serv := server.New(driver, dsn)
+		defer serv.Stop()
 		books_storage.RegisterBooksStorageServer(grpcServ, serv)
 
 		lis, err := net.Listen("tcp", fmt.Sprintf("%s:%s", cnfg.Host, cnfg.Port))

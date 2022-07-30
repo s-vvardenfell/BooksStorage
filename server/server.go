@@ -62,3 +62,8 @@ func (s *Server) GetAuthorsByBook(
 	}
 	return res, nil
 }
+
+// Закрывает соединение с бд
+func (s *Server) Stop() {
+	_ = s.ad.Close()
+}
