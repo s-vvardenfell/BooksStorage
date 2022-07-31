@@ -11,7 +11,8 @@ protos:
 
 # Run docker with database and server
 dockerrun: protos
-	docker-compose -f docker-compose.yml up --build
+	docker-compose docker-compose.yml up --build
 
+# Run server locally
 server: protos
 	go run main.go --config resources/config.yml
