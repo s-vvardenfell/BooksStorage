@@ -1,7 +1,7 @@
-# Set env var with dsn to connect to database
-export DSN := s.vvardenfell:Zxasqw12@/kvadoru
+# Set env var with dsn to connect to database (need specify local db user/pass)
+export DSN := user:pass@/kvadoru
 
-# Run tests (need specify user/pass)
+# Run tests
 tests:
 	go test -v -cover ./...
 
