@@ -26,7 +26,7 @@ type Server struct {
 func New(driver, dsn string) *Server {
 	ad, err := mysql_adapter.NewMySqlAdapter(driver, dsn)
 	if err != nil {
-		logrus.Error("cannot create server instance, %v", err)
+		logrus.Errorf("cannot create server instance, %v", err)
 	}
 	return &Server{
 		ad: ad,
